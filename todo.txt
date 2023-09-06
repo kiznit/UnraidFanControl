@@ -1,0 +1,10 @@
+Branding - remove "Unraid" from title (?) and add some flavour (kzinti? kz? Thierry?)
+
+
+Hard Drive Temp
+    - https://wiki.archlinux.org/title/lm_sensors
+    - See section 5.3 - S.M.A.R.T. drive temperature
+
+    Since kernel 5.6 the drivetemp module will report SATA/SAS temperature through hwmon, but sensors-detect does not automatically detect this so the module must be manually loaded.
+
+    # modprobe drivetemp

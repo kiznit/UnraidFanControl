@@ -1,0 +1,14 @@
+<?xml version='1.0' standalone='yes'?>
+
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "UnraidFanControl">
+<!ENTITY author    "Thierry Tremblay">
+<!ENTITY version   "2023.09.06">
+<!ENTITY pluginURL "https://github.com/dlandon/unraid-snap/raw/master/ntfs-3g-x86_64.plg">
+]>
+
+<PLUGIN  name="&name;"
+         author="&author;"
+         version="&version;"
+         pluginURL="&pluginURL;">
+</PLUGIN>
