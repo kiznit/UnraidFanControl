@@ -1,0 +1,34 @@
+Menu="VMSwitcher:1"
+Title="Target Settings"
+---
+<?php
+#Comment
+?>
+<div class="desc">
+<b>Instructions:</b> Enable and configure your target systems.<br/><br/>
+<i>Add hostdev data for passthrough GPUs, Adapters & USB devices permanently associated with each of your workstations.</i>
+</div>
+
+<div class="formm">
+<form id="targetConfig" onsubmit="return false">
+<p>TARGET 1</p>
+<label for="T1name">name</label>
+<input type="text" id="T1name" size="6">&nbsp;&nbsp;
+<input type="checkbox" id="T1enable" onclick="EnableDisableTextBox(this, 'T1data')">
+<label for="T1enable">enable</label>
+<br/><br/>
+<textarea name="Data" id="T1data" rows="8" cols="20" disabled="disabled">Enter code here...</textarea>
+<br/><br/>
+<p>TARGET 2</p>
+<label for="T1name">name</label>
+<input type="text" id="T2name" size="6">&nbsp;&nbsp;
+<input type="checkbox" id="T2enable" onclick="EnableDisableTextBox(this, 'T2data')">
+<label for="T2enable">enable</label>
+<br/><br/>
+<textarea name="Data" id="T2data" rows="8" cols="20" disabled="disabled">Enter code here...</textarea>
+<br/><br/>
+<input id="savecfg" type="submit" value="Save" onclick="saveTargetCfg()">
+</form>
+</div>
+
+
