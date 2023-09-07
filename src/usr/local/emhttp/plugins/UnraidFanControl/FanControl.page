@@ -30,6 +30,7 @@ Icon="images/UnraidFanControl.png"
 */
 
 $plugin = 'UnraidFanControl';
+$cfg = [];
 
 ?>
 
@@ -41,6 +42,20 @@ $(function() {
 </script>
 
 <div class="desc">
-<b>Instructions:</b> This page will show Unraid Fan Control.<br/><br/>
 <i>Under construction.</i>
 </div>
+
+&nbsp;
+
+<form markdown="1" method="POST">
+_(Fans)_:
+: <select name="pwm_fan" class="hide">
+  <?=mk_option($cfg['pwm_fan'], 'fan1', 'Fan 1')?>
+  <?=mk_option($cfg['pwm_fan'], 'fan2', 'Fan 2')?>
+  <?=mk_option($cfg['pwm_fan'], 'fan3', 'Fan 3')?>
+  </select>
+
+&nbsp;
+: <input type="submit" value="_(Apply)_"><input type="button" value="_(Done)_" onclick="done()">
+
+</form>
