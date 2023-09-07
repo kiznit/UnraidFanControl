@@ -8,3 +8,7 @@ Hard Drive Temp
     Since kernel 5.6 the drivetemp module will report SATA/SAS temperature through hwmon, but sensors-detect does not automatically detect this so the module must be manually loaded.
 
     # modprobe drivetemp
+
+
+Calling "sensors" will spin-up drives, which is not what we want. Here is a script that checks disks.ini for temp info:
+https://forums.unraid.net/topic/114503-custom-pwm-fan-control-script-based-on-disk-temps-using-disksini-to-avoid-drive-spinup/

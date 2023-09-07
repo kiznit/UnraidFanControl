@@ -29,7 +29,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "UnraidFanControl">
 <!ENTITY author    "Thierry Tremblay">
-<!ENTITY version   "2023.09.06">
+<!ENTITY version   "2023.09.07.04">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/kiznit/&name;/dev/bin/&name;.plg">
 <!ENTITY launch    "Settings/FanControl">
 ]>
@@ -52,7 +52,7 @@
 <!-- SOURCE PACKAGE -->
 <FILE Name="/boot/config/plugins/&name;/&name;.txz" Run="upgradepkg --install-new --reinstall">
 <URL>https://raw.githubusercontent.com/kiznit/&name;/dev/bin/&name;.txz</URL>
-<MD5>da1e12587200c541084e887d169b605c</MD5>
+<MD5>6c005f4473a6ae440f27420b1faa0ef3</MD5>
 </FILE>
 
 <!-- POST-INSTALL SCRIPT -->

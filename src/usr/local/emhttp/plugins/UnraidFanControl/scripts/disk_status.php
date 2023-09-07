@@ -1,7 +1,3 @@
-Menu="Utilities"
-Title="Unraid Fan Control"
-Icon="images/UnraidFanControl.png"
----
 <?php
 /*
     Copyright (c) 2023, Thierry Tremblay
@@ -28,37 +24,4 @@ Icon="images/UnraidFanControl.png"
     OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
-define('PLUGIN_NAME', 'UnraidFanControl');
-define('ROOT_PATH', dirname(__DIR__).'/');
-
-include(ROOT_PATH.'scripts/disk_status.php');
-
 ?>
-
-<script>
-// TODO: Dynamix checks for the existence of pid file "/var/run/file.pid" and shows 'Running' if it exists and 'Stopped' if it is not found
-// Check autofan for example, it uses /var/run/autofan.pid as a lock file to ensure there is only one instance running
-$(function() {
-    showStatus('<?= PLUGIN_NAME ?>');
-});
-</script>
-
-<div class="desc">
-<i>Under construction.</i>
-</div>
-
-&nbsp;
-
-<form markdown="1" method="POST">
-_(Fans)_:
-: <select name="pwm_fan" class="hide">
-  <?=mk_option($cfg['pwm_fan'], 'fan1', 'Fan 1')?>
-  <?=mk_option($cfg['pwm_fan'], 'fan2', 'Fan 2')?>
-  <?=mk_option($cfg['pwm_fan'], 'fan3', 'Fan 3')?>
-  </select>
-
-&nbsp;
-: <input type="submit" value="_(Apply)_"><input type="button" value="_(Done)_" onclick="done()">
-
-</form>
