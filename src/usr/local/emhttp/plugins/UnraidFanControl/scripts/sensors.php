@@ -27,6 +27,14 @@
 
 $dev = $_SERVER['DOCUMENT_ROOT'] ? false : true;
 
+function endswith($haystack, $needle) {
+    $length = strlen($needle);
+    if( !$length ) {
+        return true;
+    }
+    return substr($haystack, -$length) === $needle;
+}
+
 function read_sensors() {
     $sensors = json_decode(file_get_contents("sensors.json"), true);
     return $sensors;
@@ -36,39 +44,79 @@ function detect_sensors() {
     global $dev;
     $bus = NULL;
     $adapter = NULL;
+    $sensors = array(
+        "fans" => array(),
+        "temps" => array(),
+    );
 
     $raw = $dev
         ? file_get_contents("sensors.txt")
         : shell_exec("sensors");
     
     foreach(explode("\n", $raw) as $line) {
-        $pos = strpos($line, "(");
-        if ($pos) $line = substr($line, 0, $pos);
-        $line = trim(preg_replace("/[\s:+]+/", " ", $line));
-
+        // Detect end of section
         if (!$line) {
-            if ($bus)
-                echo "\n";
             $bus = NULL;
             $adapter = NULL;
             continue;
         }
 
+        // Strip things
+        $pos = strpos($line, "(");
+        if ($pos) $line = substr($line, 0, $pos);
+        $line = trim(preg_replace("/[\s+]+/", " ", $line));
+
+        if (!$line) {
+            continue;
+        }
+
+        // New bus?
         if (!$bus) {
             $bus = $line;
-            echo "BUS: ", $line, "\n";
+            continue;
         }
-        else if (!$adapter) {
-            $adapter = $line;
-            echo "ADAPTER: ", $line, "\n";
+
+        // New adapter?
+        if (!$adapter) {
+            $adapter = trim(explode(':', $line)[1]);
+            continue;
         }
-        else
-        {
-            echo "SENSOR: ", $line, "\n";
+
+        $parts = explode(":", $line);
+        if (count($parts) == 2) {
+            $name = $parts[0];
+            $value = $parts[1];
+
+            if (endswith($value, "C")) {
+                $value = floatval($value);
+                array_push($sensors["temps"], array(
+                    "bus" => $bus,
+                    "adapter" => $adapter,
+                    "name" => $name,
+                    "value" => $value,
+                ));
+            }
+            else if (endswith($line, " RPM")) {
+                $value = floatval($value);
+                array_push($sensors["fans"], array(
+                    "bus" => $bus,
+                    "adapter" => $adapter,
+                    "name" => $name,
+                    "value" => $value,
+                ));
+            }
         }
     }
+
+    sort($sensors['fans']);
+    sort($sensors['temps']);
+
+    return $sensors;
 }
 
-if ($dev)
-    detect_sensors();
+
+if ($dev) {
+    $sensors = detect_sensors();
+    echo print_r($sensors);
+}
 ?>
