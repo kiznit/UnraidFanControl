@@ -1,7 +1,3 @@
-Menu="Utilities"
-Title="Unraid Fan Control"
-Icon="images/UnraidFanControl.png"
----
 <?php
 /*
     Copyright (c) 2023, Thierry Tremblay
@@ -29,37 +25,50 @@ Icon="images/UnraidFanControl.png"
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-$plugin_name = "UnraidFanControl";
-$doc_root    = ($_SERVER['DOCUMENT_ROOT'] ?: "/home/kzinti/dev/UnraidFanControl/src/usr/local/emhttp")."/";
-$plugin_path = "$doc_root/plugins/${plugin_name}/";
+$dev = $_SERVER['DOCUMENT_ROOT'] ? false : true;
 
-include($plugin_path."scripts/sensors.php");
+function read_sensors() {
+    $sensors = json_decode(file_get_contents("sensors.json"), true);
+    return $sensors;
+}
 
+function detect_sensors() {
+    global $dev;
+    $bus = NULL;
+    $adapter = NULL;
+
+    $raw = $dev
+        ? file_get_contents("sensors.txt")
+        : shell_exec("sensors");
+    
+    foreach(explode("\n", $raw) as $line) {
+        $pos = strpos($line, "(");
+        if ($pos) $line = substr($line, 0, $pos);
+        $line = trim(preg_replace("/[\s:+]+/", " ", $line));
+
+        if (!$line) {
+            if ($bus)
+                echo "\n";
+            $bus = NULL;
+            $adapter = NULL;
+            continue;
+        }
+
+        if (!$bus) {
+            $bus = $line;
+            echo "BUS: ", $line, "\n";
+        }
+        else if (!$adapter) {
+            $adapter = $line;
+            echo "ADAPTER: ", $line, "\n";
+        }
+        else
+        {
+            echo "SENSOR: ", $line, "\n";
+        }
+    }
+}
+
+if ($dev)
+    detect_sensors();
 ?>
-
-<script>
-// TODO: Dynamix checks for the existence of pid file "/var/run/file.pid" and shows 'Running' if it exists and 'Stopped' if it is not found
-// Check autofan for example, it uses /var/run/autofan.pid as a lock file to ensure there is only one instance running
-$(function() {
-    showStatus('<?= $plugin_name ?>');
-});
-</script>
-
-<div class="desc">
-<i>Under construction.</i>
-</div>
-
-&nbsp;
-
-<form markdown="1" method="POST">
-_(Fans)_:
-: <select name="pwm_fan" class="hide">
-  </select>
-
-&nbsp;
-: <input type="submit" value="_(Apply)_"><input type="button" value="_(Done)_" onclick="done()">
-
-</form>
-
-&nbsp;
-<?= detect_sensors(); ?>
