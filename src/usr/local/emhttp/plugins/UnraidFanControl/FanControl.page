@@ -45,21 +45,20 @@ $(function() {
 });
 </script>
 
-<div class="desc">
-<i>Under construction.</i>
-</div>
-
-&nbsp;
-
-<form markdown="1" method="POST">
-_(Fans)_:
-: <select name="pwm_fan" class="hide">
-  </select>
-
-&nbsp;
-: <input type="submit" value="_(Apply)_"><input type="button" value="_(Done)_" onclick="done()">
-
-</form>
-
-&nbsp;
-<?= detect_sensors(); ?>
+<table class="disk_status wide">
+<thead><tr><td>Bus</td><td>Adapter</td><td>Sensor</td><td>Value</td></tr></thead>
+<tbody id="array_devices">
+<?php
+    foreach(detect_sensors() as $type => $value) {
+        $units = ($type === "fans") ? " RPM" : "°C";
+        foreach($value as $sensor) {
+            echo "<tr>";
+            echo "<td>".$sensor["bus"]."</td>";
+            echo "<td>".$sensor["adapter"]."</td>";
+            echo "<td>".$sensor["name"]."</td>";
+            echo "<td>".$sensor["value"].$units."</td>";
+            echo "</tr>";
+        }
+    }
+?>
+</table>
