@@ -36,87 +36,29 @@ function endswith($haystack, $needle) {
 }
 
 function read_sensors() {
-    $sensors = json_decode(file_get_contents("sensors.json"), true);
-    return $sensors;
-}
-
-function detect_sensors() {
     global $dev;
-    $bus = NULL;
-    $adapter = NULL;
-    $sensors = array(
-        "fans" => array(),
-        "temps" => array(),
-    );
-
     $raw = $dev
-        ? file_get_contents("sensors.txt")
-        : shell_exec("sensors");
+        ? file_get_contents("sensors.json")
+        : shell_exec("sensors -j");
     
-    foreach(explode("\n", $raw) as $line) {
-        // Detect end of section
-        if (!$line) {
-            $bus = NULL;
-            $adapter = NULL;
-            continue;
-        }
-
-        // Strip things
-        $pos = strpos($line, "(");
-        if ($pos) $line = substr($line, 0, $pos);
-        $line = trim(preg_replace("/[\s+]+/", " ", $line));
-
-        if (!$line) {
-            continue;
-        }
-
-        // New bus?
-        if (!$bus) {
-            $bus = $line;
-            continue;
-        }
-
-        // New adapter?
-        if (!$adapter) {
-            $adapter = trim(explode(':', $line)[1]);
-            continue;
-        }
-
-        $parts = explode(":", $line);
-        if (count($parts) == 2) {
-            $name = $parts[0];
-            $value = $parts[1];
-
-            if (endswith($value, "C")) {
-                $value = floatval($value);
-                array_push($sensors["temps"], array(
-                    "bus" => $bus,
-                    "adapter" => $adapter,
-                    "name" => $name,
-                    "value" => $value,
-                ));
+    $source = json_decode($raw, true);
+    $sensors = Array();
+    foreach($source as $bus => $data) {
+        $sensors[$bus] = Array();
+        foreach($data as $name => $properties) {
+            if ($name == "Adapter") {
+                continue;
             }
-            else if (endswith($line, " RPM")) {
-                $value = floatval($value);
-                array_push($sensors["fans"], array(
-                    "bus" => $bus,
-                    "adapter" => $adapter,
-                    "name" => $name,
-                    "value" => $value,
-                ));
+            foreach ($properties as $property => $value) {
+                if (endswith($property, "_input")) {
+                    $sensors[$bus][$name] = $value;
+                }
             }
         }
     }
 
-    sort($sensors['fans']);
-    sort($sensors['temps']);
-
     return $sensors;
 }
 
-
-if ($dev) {
-    $sensors = detect_sensors();
-    echo print_r($sensors);
-}
+echo print_r(json_encode(read_sensors()), true);
 ?>

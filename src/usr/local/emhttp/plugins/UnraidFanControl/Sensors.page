@@ -31,7 +31,7 @@ Title="Sensors"
 $plugin_name = "UnraidFanControl";
 $doc_root    = ($_SERVER['DOCUMENT_ROOT'] ?: "/home/kzinti/dev/UnraidFanControl/src/usr/local/emhttp")."/";
 $plugin_path = "${doc_root}plugins/${plugin_name}/";
-include($plugin_path."scripts/sensors.php");
+include($plugin_path."scripts/detect.php");
 ?>
 
 <table class="disk_status wide">

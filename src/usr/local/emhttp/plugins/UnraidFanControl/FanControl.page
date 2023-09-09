@@ -1,5 +1,5 @@
 Menu="Utilities"
-Title="Unraid Fan Control"
+Title="Fan Control"
 Icon="UnraidFanControl.png"
 Type="xmenu"
 Tabs="true"
