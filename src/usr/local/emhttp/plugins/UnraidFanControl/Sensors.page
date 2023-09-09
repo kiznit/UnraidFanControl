@@ -1,8 +1,5 @@
-Menu="Utilities"
-Title="Unraid Fan Control"
-Icon="UnraidFanControl.png"
-Type="xmenu"
-Tabs="true"
+Menu="FanControl:1"
+Title="Sensors"
 ---
 <?php
 /*
@@ -34,12 +31,23 @@ Tabs="true"
 $plugin_name = "UnraidFanControl";
 $doc_root    = ($_SERVER['DOCUMENT_ROOT'] ?: "/home/kzinti/dev/UnraidFanControl/src/usr/local/emhttp")."/";
 $plugin_path = "${doc_root}plugins/${plugin_name}/";
+include($plugin_path."scripts/sensors.php");
 ?>
 
-<script>
-// TODO: Dynamix checks for the existence of pid file "/var/run/file.pid" and shows 'Running' if it exists and 'Stopped' if it is not found
-// Check autofan for example, it uses /var/run/autofan.pid as a lock file to ensure there is only one instance running
-$(function() {
-    showStatus('<?= $plugin_name ?>');
-});
-</script>
+<table class="disk_status wide">
+<thead><tr><td>Bus</td><td>Adapter</td><td>Sensor</td><td>Value</td></tr></thead>
+<tbody id="array_devices">
+<?php
+    foreach(detect_sensors() as $type => $value) {
+        $units = ($type === "fans") ? " RPM" : "°C";
+        foreach($value as $sensor) {
+            echo "<tr>";
+            echo "<td>".$sensor["bus"]."</td>";
+            echo "<td>".$sensor["adapter"]."</td>";
+            echo "<td>".$sensor["name"]."</td>";
+            echo "<td>".$sensor["value"].$units."</td>";
+            echo "</tr>";
+        }
+    }
+?>
+</table>
