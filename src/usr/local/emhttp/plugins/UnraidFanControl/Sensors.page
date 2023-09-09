@@ -1,5 +1,6 @@
 Menu="FanControl:1"
 Title="Sensors"
+Tag="fa-thermometer"
 ---
 <?php
 /*
@@ -28,10 +29,6 @@ Title="Sensors"
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-$plugin_name = "UnraidFanControl";
-$doc_root    = ($_SERVER['DOCUMENT_ROOT'] ?: "/home/kzinti/dev/UnraidFanControl/src/usr/local/emhttp")."/";
-$plugin_path = "${doc_root}plugins/${plugin_name}/";
-include($plugin_path."scripts/detect.php");
 ?>
 
 <script>
@@ -67,7 +64,7 @@ include($plugin_path."scripts/detect.php");
 <thead><tr><td>Sensor</td><td>Value</td><td>Bus</td><td>Adapter</td><td>Type</td></tr></thead>
 <tbody id="array_devices">
 <?php
-    foreach(detect_sensors() as $index=>$sensor) {
+    foreach(detect_sensors() as $index => $sensor) {
         $units = ($sensor["type"] === "fan") ? " RPM" : "°C";
         echo "<tr>";
         echo "<td>".$sensor["name"]."</td>";

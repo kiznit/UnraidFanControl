@@ -1,8 +1,9 @@
 Menu="Utilities"
-Title="Fan Control"
 Icon="UnraidFanControl.png"
 Type="xmenu"
 Tabs="true"
+Title="Fan Control"
+Tag="UnraidFanControl16.png"
 ---
 <?php
 /*
@@ -33,7 +34,9 @@ Tabs="true"
 
 $plugin_name = "UnraidFanControl";
 $doc_root    = ($_SERVER['DOCUMENT_ROOT'] ?: "/home/kzinti/dev/UnraidFanControl/src/usr/local/emhttp")."/";
-$plugin_path = "${doc_root}plugins/${plugin_name}/";
+$include_path = "${doc_root}plugins/${plugin_name}/include/";
+
+include($include_path."detect.php");
 ?>
 
 <script>

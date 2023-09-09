@@ -1,3 +1,7 @@
+Menu="FanControl:2"
+Title="Setup"
+Tag="fa-wrench"
+---
 <?php
 /*
     Copyright (c) 2023, Thierry Tremblay
@@ -24,4 +28,7 @@
     OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
     OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
 ?>
+
+Setup - Hello world
