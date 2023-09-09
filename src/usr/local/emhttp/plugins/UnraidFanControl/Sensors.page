@@ -34,20 +34,48 @@ $plugin_path = "${doc_root}plugins/${plugin_name}/";
 include($plugin_path."scripts/detect.php");
 ?>
 
+<script>
+    <?php echo "var sensors = ".json_encode(detect_sensors() ?: Array(), true).";" ?>
+
+    function update_sensors(sensors, data) {
+        sensors.forEach(function(sensor, index) {
+            var value = data[sensor.bus][sensor.name];
+            if (value !== undefined) {
+                sensor.value = value;
+                if (sensor.type === "fan") {
+                    $("#sensor-value-" + index).text(value + " RPM");
+                } else {
+                    $("#sensor-value-" + index).text(value.toFixed(1) + "°C");
+                }
+            }
+        });
+    }
+
+    function render_sensors() {
+        $.getJSON("/plugins/<?=$plugin_name?>/scripts/sensors.php", function(data) {
+            update_sensors(sensors, data);
+        });
+    }
+
+    $(document).ready(function() {
+        render_sensors();
+        setInterval(function() { render_sensors(); }, 1000);
+    });
+</script>
+
 <table class="disk_status wide">
-<thead><tr><td>Bus</td><td>Adapter</td><td>Sensor</td><td>Value</td></tr></thead>
+<thead><tr><td>Sensor</td><td>Value</td><td>Bus</td><td>Adapter</td><td>Type</td></tr></thead>
 <tbody id="array_devices">
 <?php
-    foreach(detect_sensors() as $type => $value) {
-        $units = ($type === "fans") ? " RPM" : "°C";
-        foreach($value as $sensor) {
-            echo "<tr>";
-            echo "<td>".$sensor["bus"]."</td>";
-            echo "<td>".$sensor["adapter"]."</td>";
-            echo "<td>".$sensor["name"]."</td>";
-            echo "<td>".$sensor["value"].$units."</td>";
-            echo "</tr>";
-        }
+    foreach(detect_sensors() as $index=>$sensor) {
+        $units = ($sensor["type"] === "fan") ? " RPM" : "°C";
+        echo "<tr>";
+        echo "<td>".$sensor["name"]."</td>";
+        echo "<td id=\"sensor-value-".$index."\">".$sensor["value"].$units."</td>";
+        echo "<td>".$sensor["bus"]."</td>";
+        echo "<td>".$sensor["adapter"]."</td>";
+        echo "<td>".$sensor["type"]."</td>";
+        echo "</tr>";
     }
 ?>
 </table>

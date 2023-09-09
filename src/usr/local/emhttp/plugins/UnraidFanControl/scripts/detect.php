@@ -39,10 +39,7 @@ function detect_sensors() {
     global $dev;
     $bus = NULL;
     $adapter = NULL;
-    $sensors = array(
-        "fans" => array(),
-        "temps" => array(),
-    );
+    $sensors = array();
 
     $raw = $dev
         ? file_get_contents("sensors.txt")
@@ -84,27 +81,26 @@ function detect_sensors() {
 
             if (endswith($value, "C")) {
                 $value = floatval($value);
-                array_push($sensors["temps"], array(
+                array_push($sensors, array(
                     "bus" => $bus,
                     "adapter" => $adapter,
                     "name" => $name,
+                    "type" => "temperature",
                     "value" => $value,
                 ));
             }
             else if (endswith($line, " RPM")) {
                 $value = floatval($value);
-                array_push($sensors["fans"], array(
+                array_push($sensors, array(
                     "bus" => $bus,
                     "adapter" => $adapter,
                     "name" => $name,
+                    "type" => "fan",
                     "value" => $value,
                 ));
             }
         }
     }
-
-    sort($sensors['fans']);
-    sort($sensors['temps']);
 
     return $sensors;
 }
